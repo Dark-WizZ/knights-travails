@@ -45,13 +45,7 @@ class Knight {
         while (path[index]) {
           res.push(this.switchDim(path[index]));
           index = path[index];
-          if (index == from) {
-            res = res.reverse();
-            console.log(`You made it in ${res.length} moves!
-            Here's your path:`);
-            res.forEach((r) => console.log(r));
-            return;
-          }
+          if (index == from) return res.reverse();
         }
       }
 
@@ -116,4 +110,10 @@ class Knight {
 const board = new GameBoard();
 const knight = new Knight(board.board);
 
-knight.bestMove([3, 3], [4, 3]);
+
+//Driver
+let bm = knight.bestMove([3, 3], [4, 3]);
+console.log(`You made it in ${bm.length} moves!
+Here's your path:`);
+bm.forEach((r) => console.log(r));
+return;
