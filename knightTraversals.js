@@ -11,16 +11,20 @@ class GameBoard{
   }
 }
 
-class Node{
-  constructor(value){
-    this.value = value;
-    this.children = [];
+class Position{
+  constructor(pos){
+    this.pos = pos;
+    this.nextPos = [];
+  }
+
+  genNextPos(arr){
+    this.nextPos = arr.map(p => new Position(p));
   }
 }
 
-class Tree{
-  constructor(node){
-    this.root = node;
+class MovesMap{
+  constructor(pos){
+    this.root = pos;
   }
 }
 
@@ -28,11 +32,25 @@ class AI{
   constructor(knight, board){
     this.board = board;
     this.knight = knight;
+    this.cnt = 0;
   }
 
   calcMoves(from, to){
-
+    const pos = new Position(from);
+    const movesMap = new MovesMap(pos);
+    const res = this.calcMovesRecurse(movesMap.root, to);
+    console.log(res)
   }
+
+  calcMovesRecurse(root, to){
+    this.cnt++;
+    if(!root || root.pos.join()==to.join() || this.cnt > 64) return 0;
+    root.genNextPos(knight.possibleMove(root.pos))
+    this.board[root.pos[0]][root.pos[1]] = 1;
+    console.log(this.board)
+    return this.calcMovesRecurse(root.nextPos[0], to) + 1;
+  }
+
 }
 
 class Knight{
@@ -61,5 +79,7 @@ class Knight{
 const board = new GameBoard();
 const knight = new Knight(board.board);
 const ai = new AI(knight, board.board);
+const position = new Position([2,3]);
+position.genNextPos(knight.possibleMove(position.pos))
 
-console.log(knight.possibleMove([6,4]))
+ai.calcMoves([1,1],[1,7])
