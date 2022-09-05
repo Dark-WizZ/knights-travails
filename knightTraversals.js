@@ -11,34 +11,13 @@ class GameBoard{
   }
 }
 
-class Node{
-  constructor(value){
-    this.value = value;
-    this.children = [];
-  }
-}
-
-class Tree{
-  constructor(node){
-    this.root = node;
-  }
-}
-
-class AI{
-  constructor(knight, board){
-    this.board = board;
-    this.knight = knight;
-  }
-
-  calcMoves(from, to){
-
-  }
-}
-
 class Knight{
   constructor(board){
     this.board = board;
+    this.waySheet = [];
+    this.genWaySheet();
   }
+
   possibleMove(from){
     let moves = [];
     let a = from[0], b = from[1];
@@ -56,10 +35,30 @@ class Knight{
       };
     });
   }
+
+  genWaySheet(){
+    for(let i=0; i<8; i++){
+      for(let j=0; j<8; j++){
+        let temp= [];
+        this.possibleMove([i,j]).forEach( m => {
+          temp.push(this.switchDim(m));
+        })
+        this.waySheet.push(temp);
+      }
+    }
+  }
+  
+  switchDim(arg){
+    if(typeof arg == 'number'){
+      return [Math.floor(arg/8), arg % 8];
+    }else{
+      return (arg[0]*8)+arg[1];
+    }
+  }
 }
 
 const board = new GameBoard();
 const knight = new Knight(board.board);
-const ai = new AI(knight, board.board);
 
-console.log(knight.possibleMove([6,4]))
+console.log(knight.possibleMove([0, 0]));
+console.log(knight.waySheet)
