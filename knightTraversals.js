@@ -39,16 +39,21 @@ class AI{
     const pos = new Position(from);
     const movesMap = new MovesMap(pos);
     const res = this.calcMovesRecurse(movesMap.root, to);
-    console.log(res)
   }
 
   calcMovesRecurse(root, to){
     this.cnt++;
-    if(!root || root.pos.join()==to.join() || this.cnt > 64) return 0;
+    if(!root || root.pos.join()==to.join() ) return 0;
     root.genNextPos(knight.possibleMove(root.pos))
-    this.board[root.pos[0]][root.pos[1]] = 1;
-    console.log(this.board)
-    return this.calcMovesRecurse(root.nextPos[0], to) + 1;
+    // console.log(this.board)
+    let res;
+    for(let p of root.nextPos){
+      console.log(p.pos);
+      this.board[root.pos[0]][root.pos[1]] = 1;
+      res = this.calcMovesRecurse(p, to) + 1;
+      this.board[root.pos[0]][root.pos[1]] = 0;
+      return res;
+    }
   }
 
 }
