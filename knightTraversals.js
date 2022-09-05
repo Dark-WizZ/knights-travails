@@ -11,11 +11,54 @@ class GameBoard{
   }
 }
 
+class Vertex{
+  constructor(from, to){
+    this.from = from;
+    this.to = to;
+  }
+}
+
 class Knight{
   constructor(board){
     this.board = board;
     this.waySheet = [];
     this.genWaySheet();
+  }
+
+  bestMove(from, to){
+    from = this.switchDim(from);
+    to = this.switchDim(to);
+    if(from == to) return this.switchDim(from);
+    let path = new Array(64);
+    let q = [];
+    this.waySheet[from].forEach(m => {
+      q.push(new Vertex(from, m))
+    })
+    while(q.length){
+      if(path[to]!=null){
+        let res=[];
+        let index = to;
+        res.push(this.switchDim(to));
+        while(path[index]){
+          res.push(this.switchDim(path[index]));
+          index = path[index];
+          if(index == from){
+            res = res.reverse();
+            console.log(`You made it in ${res.length} moves!
+            Here's your path:`)
+            res.forEach(r => console.log(r));
+            return;
+          };
+        }
+      }
+      let v = q.shift();
+      if(!path[v.to] && path[v.from]!=v.to){
+        path[v.to] = v.from;
+        this.waySheet[v.to].forEach(m => {
+          q.push(new Vertex(v.to, m))
+        })
+      }
+    }
   }
 
   possibleMove(from){
@@ -60,5 +103,4 @@ class Knight{
 const board = new GameBoard();
 const knight = new Knight(board.board);
 
-console.log(knight.possibleMove([0, 0]));
-console.log(knight.waySheet)
+knight.bestMove([3,3],[4,3]);
